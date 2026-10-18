@@ -5,6 +5,15 @@
 /.pnp
 .pnp.js
 .env
+
+# lockfiles
+*.lock
+*.lockb
+package-lock.json
+npm-shrinkwrap.json
+pnpm-lock.yaml
+pnpm-lock.yml
+
 # testing
 /coverage
 
