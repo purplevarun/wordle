@@ -99,6 +99,7 @@ test("the root opens the rainbow landing page before level selection", () => {
 	window.history.replaceState(null, "", "/wordle/");
 	render(<ChakraProvider><App /></ChakraProvider>);
 	expect(screen.getByRole("heading", { name: "Wordle on Steroids" })).toBeInTheDocument();
+	expect(screen.getByRole("heading", { name: "Wordle on Steroids" }).querySelector("img")).toBeNull();
 	expect(screen.getByRole("button", { name: /Click to Play Wordle/ })).toBeInTheDocument();
 	expect(screen.queryByRole("button", { name: "Standard", exact: true })).not.toBeInTheDocument();
 	expect(screen.queryByRole("group", { name: /letter word/ })).not.toBeInTheDocument();

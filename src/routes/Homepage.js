@@ -24,11 +24,6 @@ const Homepage = () => {
 					<RainbowText fontSize="inherit" fontWeight="inherit" colorMode={colorMode}>
 						Wordle on Steroids
 					</RainbowText>
-					<img
-						src={process.env.PUBLIC_URL + "/images/arm-muscle.png"}
-						alt=""
-						className="arm-muscle-image"
-					/>
 				</div>
 				<Button
 					colorScheme="green"
