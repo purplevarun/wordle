@@ -20,12 +20,10 @@
 .heading {
 	display: flex;
 	align-items: center;
+	gap: 8px;
 	padding-bottom: 20px;
 	font-size: 20px;
 	font-weight: 700;
-	animation-name: rainbow-flicker;
-	animation-duration: 1s;
-	animation-iteration-count: infinite;
 }
 .arm-muscle-image {
 	width: 40px;
@@ -36,59 +34,5 @@
 	}
 	.arm-muscle-image {
 		width: 70px;
-	}
-}
-@keyframes rainbow-flicker {
-	0% {
-		background-image: linear-gradient(
-			to left,
-			white,
-			green,
-			yellow,
-			magenta,
-			orange,
-			red
-		);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-	}
-	25% {
-		background-image: linear-gradient(
-			to left,
-			orange,
-			red,
-			white,
-			green,
-			yellow,
-			magenta
-		);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-	}
-	50% {
-		background-image: linear-gradient(
-			to left,
-			yellow,
-			green,
-			magenta,
-			orange,
-			red,
-			white
-		);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-	}
-	100% {
-		background-image: linear-gradient(
-			to left,
-			green,
-			yellow,
-			magenta,
-			white,
-			orange,
-			red
-		);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
 	}
 }

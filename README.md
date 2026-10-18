@@ -2,6 +2,9 @@
 
 Play at https://purplevarun.github.io/wordle/.
 
+The landing page uses `rainbow-text-react` for its title. Its Play button opens
+the level selection screen; Settings > Homepage returns to the landing page.
+
 Three difficulty levels: Noob (3 letters), Standard (4), and Original (5).
 Each game has four attempts. Use a physical keyboard or the on-screen keys.
 Progress is saved locally per difficulty; New Game or Play Again starts over.
@@ -25,8 +28,9 @@ the dependency ranges in `package.json`, so resolved versions can change between
 builds. CI uses a non-frozen install without a lockfile-dependent cache.
 
 The development app is served under `/wordle/`. Production assets use the same
-base path. GitHub Pages redirects deep links through the root and restores the
-original route, query, and fragment before React starts.
+base path. Navigation uses hash routes, such as `/wordle/#/play?level=Original`,
+so refreshing any screen works on GitHub Pages. Legacy path-based links redirect
+to their matching hash routes.
 
 ## Deployment
 

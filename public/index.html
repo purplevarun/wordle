@@ -14,7 +14,7 @@
 		<title>Wordle</title>
 		<script>
 			var route = new URLSearchParams(location.search).get("route");
-			if (route && route.startsWith("/wordle/")) history.replaceState(null, "", route);
+			if (route && route.startsWith("/wordle/")) history.replaceState(null, "", "/wordle/#" + route.slice("/wordle".length));
 		</script>
     <link rel="shortcut icon" href="%PUBLIC_URL%/wordle.png" type="image/x-icon">
 	</head>

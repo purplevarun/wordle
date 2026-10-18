@@ -3,8 +3,8 @@
 <head><meta charset="utf-8"><title>Wordle</title></head>
 <body>
 <script>
-	var route = location.pathname + location.search + location.hash;
-	location.replace("/wordle/?route=" + encodeURIComponent(route));
+	var route = location.pathname.startsWith("/wordle/") ? location.pathname.slice("/wordle".length) : "/";
+	location.replace("/wordle/#" + route + location.search + location.hash);
 </script>
 <a href="/wordle/">Open Wordle</a>
 </body>

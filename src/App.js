@@ -1,5 +1,6 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+import Homepage from "./routes/Homepage";
 import Levels from "./routes/Levels";
 import Rules from "./routes/Rules";
 import About from "./routes/About";
@@ -11,47 +12,47 @@ function App() {
 		<div>
 			<div className="pages-wrapper">
 				<div className="pages">
-					<BrowserRouter>
+					<HashRouter>
 						<div className="settingsbtn">
 							<Sidebar />
 						</div>
 						<Routes>
 							<Route
-								path="/wordle/"
+								path="/"
 								exact
-								element={<Game />}
+								element={<Homepage />}
 							/>
 							<Route
-								path="/wordle/difficulty-selection"
+								path="/difficulty-selection"
 								exact
 								element={<Levels />}
 							/>
 							<Route
-								path="/wordle/rules"
+								path="/rules"
 								exact
 								element={<Rules />}
 							/>
 							<Route
-								path="/wordle/wordle"
+								path="/wordle"
 								exact
-								element={<Game />}
+								element={<Navigate to="/" replace />}
 							/>
 							<Route
-								path="/wordle/about"
+								path="/about"
 								exact
 								element={<About />}
 							/>
 							<Route
-								path="/wordle/play"
+								path="/play"
 								exact
 								element={<Game />}
 							/>
 							<Route
 								path="*"
-								element={<Navigate to="/wordle" replace />}
+								element={<Navigate to="/" replace />}
 							/>
 						</Routes>
-					</BrowserRouter>
+					</HashRouter>
 				</div>
 			</div>
 			<div className="credits">

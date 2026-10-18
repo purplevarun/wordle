@@ -124,7 +124,7 @@ function GameBoard({ level }) {
 					{rowIndex === 2 && <button type="button" className="letter-key action-key" aria-label="Backspace" title="Backspace" onClick={() => handleInput("Backspace")}><TiBackspaceOutline /></button>}
 				</div>)}
 			</div> : <div className="game-actions"><Button colorScheme="green" onClick={restart}>Play Again</Button><Button onClick={share}>Copy Result</Button></div>}
-			<Button variant="link" onClick={() => navigate("/wordle/difficulty-selection")}>Change Difficulty</Button>
+			<Button variant="link" onClick={() => navigate("/difficulty-selection")}>Change Difficulty</Button>
 		</main>
 	);
 }

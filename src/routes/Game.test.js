@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter } from "react-router-dom";
+import App from "../App";
 import Game from "./Game";
 import Sidebar from "../components/Sidebar";
 
@@ -70,4 +71,35 @@ test("settings closes after choosing a page", async () => {
 	fireEvent.click(screen.getByRole("button", { name: "Settings", exact: true }));
 	fireEvent.click(screen.getByRole("button", { name: "Rules", exact: true }));
 	await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+});
+
+test("Homepage leaves the game and hash navigation preserves difficulty on reload", async () => {
+	const savedGame = { answer: "apple", guesses: ["crane"] };
+	localStorage.setItem("wordle:Original:v1", JSON.stringify(savedGame));
+	window.history.replaceState(null, "", "/wordle/#/play?level=Original");
+	const view = render(<ChakraProvider><App /></ChakraProvider>);
+	expect(screen.getByRole("group", { name: "5-letter word, 4 attempts" })).toBeInTheDocument();
+	fireEvent.click(screen.getByRole("button", { name: "Settings", exact: true }));
+	fireEvent.click(screen.getByRole("button", { name: "Homepage", exact: true }));
+	await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+	expect(screen.queryByRole("group", { name: /letter word/ })).not.toBeInTheDocument();
+	expect(screen.getByText("Wordle on Steroids")).toHaveAttribute("id", expect.stringMatching(/^rainbow-text-(light|dark)$/));
+	expect(window.location.hash).toBe("#/");
+	fireEvent.click(screen.getByRole("button", { name: /Click to Play Wordle/ }));
+	fireEvent.click(screen.getByRole("button", { name: "Standard", exact: true }));
+	expect(window.location.hash).toBe("#/play?level=Standard");
+	expect(screen.getByRole("group", { name: "4-letter word, 4 attempts" })).toBeInTheDocument();
+	view.unmount();
+	render(<ChakraProvider><App /></ChakraProvider>);
+	expect(screen.getByRole("group", { name: "4-letter word, 4 attempts" })).toBeInTheDocument();
+	expect(JSON.parse(localStorage.getItem("wordle:Original:v1"))).toEqual(savedGame);
+});
+
+test("the root opens the rainbow landing page before level selection", () => {
+	window.history.replaceState(null, "", "/wordle/");
+	render(<ChakraProvider><App /></ChakraProvider>);
+	expect(screen.getByRole("heading", { name: "Wordle on Steroids" })).toBeInTheDocument();
+	expect(screen.getByRole("button", { name: /Click to Play Wordle/ })).toBeInTheDocument();
+	expect(screen.queryByRole("button", { name: "Standard", exact: true })).not.toBeInTheDocument();
+	expect(screen.queryByRole("group", { name: /letter word/ })).not.toBeInTheDocument();
 });

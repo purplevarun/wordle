@@ -29,7 +29,7 @@ const Levels = () => {
 						size="lg"
 						colorScheme="yellow"
 						onClick={() =>
-							navigate("/wordle/play?level=Noob", {
+							navigate("/play?level=Noob", {
 								state: { level: "Noob" },
 							})
 						}
@@ -52,7 +52,7 @@ const Levels = () => {
 						size="lg"
 						colorScheme="blue"
 						onClick={() =>
-							navigate("/wordle/play?level=Standard", {
+							navigate("/play?level=Standard", {
 								state: { level: "Standard" },
 							})
 						}
@@ -73,7 +73,7 @@ const Levels = () => {
 						size="lg"
 						colorScheme="red"
 						onClick={() =>
-							navigate("/wordle/play?level=Original", {
+							navigate("/play?level=Original", {
 								state: { level: "Original" },
 							})
 						}
