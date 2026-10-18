@@ -19,6 +19,10 @@ const Sidebar = () => {
 	const btnRef = React.useRef();
 	const { colorMode, toggleColorMode } = useColorMode();
 	const navigate = useNavigate();
+	const goTo = path => {
+		navigate(path);
+		onClose();
+	};
 	return (
 		<>
 			<Button
@@ -51,13 +55,13 @@ const Sidebar = () => {
 							</Button>
 							<Button
 								colorScheme={"blue"}
-								onClick={() => navigate("/wordle/")}
+								onClick={() => goTo("/wordle/")}
 							>
 								Homepage
 							</Button>
 							<Button
 								colorScheme="facebook"
-								onClick={() => navigate("/wordle/rules")}
+								onClick={() => goTo("/wordle/rules")}
 							>
 								Rules
 							</Button>
@@ -65,7 +69,7 @@ const Sidebar = () => {
 
 							<Button
 								colorScheme="pink"
-								onClick={() => navigate("/wordle/about")}
+								onClick={() => goTo("/wordle/about")}
 							>
 								About the Developer
 							</Button>

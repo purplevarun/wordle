@@ -1,9 +1,10 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter } from "react-router-dom";
 import Game from "./Game";
+import Sidebar from "../components/Sidebar";
 
 beforeEach(() => localStorage.clear());
 
@@ -62,4 +63,11 @@ test("physical Enter submits after clicking on-screen letters", () => {
 	for (const letter of "THE") fireEvent.click(screen.getByRole("button", { name: letter, exact: true }));
 	fireEvent.keyDown(screen.getByRole("button", { name: "E", exact: true }), { key: "Enter" });
 	expect(screen.getByRole("status")).toHaveTextContent("Solved in 1/4!");
+});
+
+test("settings closes after choosing a page", async () => {
+	render(<ChakraProvider><MemoryRouter><Sidebar /></MemoryRouter></ChakraProvider>);
+	fireEvent.click(screen.getByRole("button", { name: "Settings", exact: true }));
+	fireEvent.click(screen.getByRole("button", { name: "Rules", exact: true }));
+	await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
 });
