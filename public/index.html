@@ -6,12 +6,16 @@
 		<meta name="theme-color" content="#000000" />
 		<meta
 			name="description"
-			content="Web site created using create-react-app"
+			content="Wordle with three difficulty levels. Play three, four, or five-letter words."
 		/>
 		
 		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 		
-		<title>Wordle 2.0</title>
+		<title>Wordle</title>
+		<script>
+			var route = new URLSearchParams(location.search).get("route");
+			if (route && route.startsWith("/wordle/")) history.replaceState(null, "", route);
+		</script>
     <link rel="shortcut icon" href="%PUBLIC_URL%/wordle.png" type="image/x-icon">
 	</head>
 	<body>

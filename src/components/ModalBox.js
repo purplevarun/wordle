@@ -32,7 +32,7 @@ const ModalBox = ({ openModalBox, level, setOpenModalBox }) => {
 					<ModalCloseButton />
 					<ModalBody>
 						<Text>
-							Congratulation on completing Wordle2.0 on{" "}
+							Congratulation on completing Wordle on{" "}
 							<span style={{ color: "aqua" }}>{level}</span> mode.
 						</Text>
 					</ModalBody>
@@ -47,7 +47,7 @@ const ModalBox = ({ openModalBox, level, setOpenModalBox }) => {
 						<Button
 							colorScheme="red"
 							onClick={() =>
-								navigate("/wordle2/difficulty-selection")
+								navigate("/wordle/difficulty-selection")
 							}
 						>
 							Play Again

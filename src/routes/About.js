@@ -9,9 +9,7 @@ const About = () => {
 				2022.
 			</Text>
 			<Text alignSelf={"left"} flex={1} p={4}>
-				I initially thought of creating 3 levels but after creating the
-				first one, I realized it's a lot more complex than it looks. As
-				soon as I get time I will work on those parts !
+				All three levels are available: Noob, Standard, and Original.
 			</Text>
 			<Text alignSelf={"left"} flex={1} p={4}>
 				If you liked my version of Wordle, or have any suggestions, you

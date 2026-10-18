@@ -6,7 +6,7 @@ const Rules = () => {
 	return (
 		<div className="rules">
 			<Heading>
-				Wordle2.0 has <span style={{ color: "teal" }}>3</span> levels
+				Wordle has <span style={{ color: "teal" }}>3</span> levels
 			</Heading>
 			<Divider />
 			<div className="levels-wrapper">
@@ -15,17 +15,17 @@ const Rules = () => {
 				<Definition title="Original" />
 			</div>
 			<div className="the-definition">
-				<Text letterSpacing={2}>
+					<Text letterSpacing={0}>
 					You are given 4 chances to guess a word Everytime you submit
 					a new word, each character of that word will show a color{" "}
 					<Badge bgColor={"green"}>Green</Badge> if that character is
 					in the correct position,{" "}
-					<Badge bgColor={"greenyellow"} color={"black"}>
-						GreenishYellow
+							<Badge bgColor={"#957015"} color={"white"}>
+								Yellow
 					</Badge>{" "}
 					if that character is present but not in the correct
-					position, and <Badge bgColor={"red"}>Red</Badge> if the
-					character is not present at all.
+							position, and <Badge bgColor={"#525760"} color={"white"}>Gray</Badge> if the
+							character is not present in the remaining answer letters.
 				</Text>
 			</div>
 		</div>

@@ -1,203 +1,130 @@
-import { Badge, Button, Text, useToast } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import { Badge, Button, IconButton, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Keyboard from "../components/Keyboard";
-import "./../styles/Game.css";
-import WordBoxNoob from "./../components/WordBoxes/WordBoxNoob";
-import WordBoxOriginal from "./../components/WordBoxes/WordBoxOriginal";
-import WordBoxStandard from "./../components/WordBoxes/WordBoxStandard";
-import dictionary from "./../data/dict";
-import ModalBox from "../components/ModalBox";
-import GameLostModalBox from "./../components/GameLostModalBox";
-const Game = () => {
+import { AiOutlineEnter } from "react-icons/ai";
+import { TiBackspaceOutline } from "react-icons/ti";
+import { FaRedo } from "react-icons/fa";
+import { ATTEMPTS, LEVELS, createGame, gameStatus, restoreGame, scoreGuess, submitGuess } from "../game";
+import "../styles/Game.css";
+
+const keyboardRows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+const priority = { absent: 1, present: 2, correct: 3 };
+
+export default function Game() {
 	const location = useLocation();
+	const requested = new URLSearchParams(location.search).get("level") || location.state?.level;
+	const level = Object.prototype.hasOwnProperty.call(LEVELS, requested) ? requested : "Original";
+	return <GameBoard key={level} level={level} />;
+}
+
+function GameBoard({ level }) {
 	const navigate = useNavigate();
-	const [pageLoaded, setPageLoaded] = useState(false);
-	const [currLevel, setCurrLevel] = useState(null);
-	const [wordLength, setWordLength] = useState(-1);
-	const [row, setRow] = useState(0);
-	const [column, setColumn] = useState(0);
-	const [R, setR] = useState(null);
-	const [rowLimit, setRowLimit] = useState(null);
-	const [columnLimit, setColumnLimit] = useState(null);
-	const [answer, setAnswer] = useState(null);
-	const toast = useToast();
-	const [openModalBox, setOpenModalBox] = useState(false);
-	const [openGameLostModalBox, setOpenGameLostModalBox] = useState(false);
-	const [gameOver, setGameOver] = useState(false);
-	const gameWon = () => {
-		toast({
-			status: "success",
-			title: "That was the correct Word!",
-			duration: "2000",
+	const storageKey = `wordle:${level}:v1`;
+	const [game, setGame] = useState(() => {
+		try { return restoreGame(level, localStorage.getItem(storageKey)); }
+		catch { return createGame(level); }
+	});
+	const [input, setInput] = useState("");
+	const [message, setMessage] = useState("");
+	const status = gameStatus(game);
+	const length = LEVELS[level];
+	const keyStates = {};
+	game.guesses.forEach(guess => {
+		scoreGuess(guess, game.answer).forEach((state, index) => {
+			const letter = guess[index];
+			if (!keyStates[letter] || priority[state] > priority[keyStates[letter]]) keyStates[letter] = state;
 		});
-		setTimeout(() => {
-			setOpenModalBox(true);
-		}, 1000);
-		setGameOver(true);
-	};
-	const gameLost = () => {
-		toast({
-			status: "error",
-			title: "You have run out of tries! Game Over",
-			duration: "2000",
-		});
-		answerReveal.current.style.display = "block";
-		setTimeout(() => {
-			setOpenGameLostModalBox(true);
-		}, 1000);
-		setGameOver(true);
-	};
-
-	const answerReveal = useRef();
-
-	const handleSubmit = () => {
-		var submittedWord = "";
-		for (var idx = 0; idx < columnLimit; ++idx) {
-			submittedWord += R[row][idx].current.value;
-			console.log(R[row][idx].current.value);
-		}
-		submittedWord = submittedWord.toLowerCase();
-		if (dictionary.includes(submittedWord)) {
-			// alert("YES");
-			var equal = true;
-			for (var i = 0; i < columnLimit; ++i) {
-				if (submittedWord[i] === answer[i]) {
-					R[row][i].current.style.background = "green";
-				} else {
-					equal = false;
-					if (answer.includes(submittedWord[i])) {
-						R[row][i].current.style.background = "teal";
-					} else {
-						R[row][i].current.style.background =
-							"linear-gradient(brown,red)";
-					}
-				}
-			}
-			if (equal) {
-				gameWon();
-			}
-			if (row === rowLimit - 1) {
-				console.log("no more chances");
-				gameLost();
-			}
-			setColumn(0);
-			setRow(row + 1);
-		} else {
-			// alert("No");
-			toast({
-				status: "error",
-				title: "This word does not exist",
-				duration: 2000,
-			});
-		}
-	};
+	});
 
 	useEffect(() => {
-		if (pageLoaded === false) {
-			if (location.state && location.state.level) {
-				setCurrLevel(location.state.level);
-			} else {
-				navigate("/wordle2/notFound");
+		try { localStorage.setItem(storageKey, JSON.stringify(game)); } catch {}
+	}, [game, storageKey]);
+
+	function handleInput(key) {
+		if (status !== "playing") return;
+		if (key === "Backspace") {
+			setInput(value => value.slice(0, -1));
+			setMessage("");
+		} else if (key === "Enter") {
+			const result = submitGuess(game, input);
+			if (result.error) setMessage(result.error);
+			else {
+				setGame(result.game);
+				setInput("");
+				setMessage("");
+			}
+		} else if (/^[a-z]$/i.test(key)) {
+			setInput(value => value.length < length ? value + key.toLowerCase() : value);
+			setMessage("");
+		}
+	}
+
+	useEffect(() => {
+		function onKeyDown(event) {
+			if (event.ctrlKey || event.metaKey || event.altKey || event.repeat
+				|| event.target.closest?.("input, textarea, select, [contenteditable=true], [role=dialog]")) return;
+			if (/^[a-z]$/i.test(event.key) || event.key === "Backspace" || event.key === "Enter") {
+				if (event.key === "Enter" && event.target.closest?.("button:not(.letter-key), a")) return;
+				event.preventDefault();
+				handleInput(event.key);
 			}
 		}
-		setPageLoaded(true);
-		if (currLevel === "Noob") setWordLength(3);
-		if (currLevel === "Standard") setWordLength(4);
-		if (currLevel === "Original") setWordLength(5);
-	}, [currLevel, location.state, navigate, pageLoaded, setPageLoaded]);
-	return (
-		<div>
-			<div className="levelindicator">
-				<Badge colorScheme={"teal"}>{currLevel}</Badge>
-				{/* <Badge colorScheme={"red"}>{answer}</Badge>  */}
-				{/* shows answer*/}
-			</div>
-			<div className="game">
-				<div className="wordbox">
-					{wordLength === 3 ? (
-						<WordBoxNoob
-							row={row}
-							setRow={setRow}
-							column={column}
-							setColumn={setColumn}
-							R={R}
-							setR={setR}
-							setRowLimit={setRowLimit}
-							setColumnLimit={setColumnLimit}
-							setAnswer={setAnswer}
-							rowLimit={rowLimit}
-							columnLimit={columnLimit}
-						/>
-					) : wordLength === 4 ? (
-						<WordBoxStandard
-							row={row}
-							setRow={setRow}
-							column={column}
-							setColumn={setColumn}
-							R={R}
-							setR={setR}
-							setAnswer={setAnswer}
-						/>
-					) : wordLength === 5 ? (
-						<WordBoxOriginal
-							row={row}
-							setRow={setRow}
-							column={column}
-							setColumn={setColumn}
-							R={R}
-							setR={setR}
-							setAnswer={setAnswer}
-						/>
-					) : (
-						""
-					)}
-				</div>
-				<div className="answer-reveal" ref={answerReveal}>
-					<Text>
-						The Word was{" "}
-						<Badge colorScheme={"green"}>{answer}</Badge>
-					</Text>
-				</div>
-				<div className="modalboxwrapper">
-					<ModalBox
-						openModalBox={openModalBox}
-						level={currLevel}
-						setOpenModalBox={setOpenModalBox}
-					/>
-				</div>
-				<div className="modalboxwrapper">
-					<GameLostModalBox
-						openModalBox={openGameLostModalBox}
-						level={currLevel}
-						setOpenModalBox={setOpenGameLostModalBox}
-					/>
-				</div>
-				<div className="submit-word-btn">
-					<Button
-						colorScheme={"yellow"}
-						onClick={() => handleSubmit()}
-					>
-						Submit Word
-					</Button>
-				</div>
-				<div className="keyboard">
-					<Keyboard
-						row={row}
-						setRow={setRow}
-						column={column}
-						setColumn={setColumn}
-						R={R}
-						setR={setR}
-						rowLimit={rowLimit}
-						columnLimit={columnLimit}
-						handleSubmit={handleSubmit}
-						gameOver={gameOver}
-					/>
-				</div>
-			</div>
-		</div>
-	);
-};
+		window.addEventListener("keydown", onKeyDown);
+		return () => window.removeEventListener("keydown", onKeyDown);
+	});
 
-export default Game;
+	function restart() {
+		setGame(createGame(level));
+		setInput("");
+		setMessage("");
+	}
+
+	async function share() {
+		const symbols = { correct: "\u{1f7e9}", present: "\u{1f7e8}", absent: "\u2b1b" };
+		const rows = game.guesses.map(guess => scoreGuess(guess, game.answer).map(state => symbols[state]).join(""));
+		const text = `Wordle ${level} ${status === "won" ? game.guesses.length : "X"}/${ATTEMPTS}\n${rows.join("\n")}\nhttps://purplevarun.github.io/wordle/`;
+		try {
+			await navigator.clipboard.writeText(text);
+			setMessage("Result copied");
+		} catch { setMessage("Clipboard unavailable. Please try again in your browser."); }
+	}
+
+	return (
+		<main className="wordle-game">
+			<header className="game-heading">
+				<div><h1>Wordle</h1><Badge colorScheme="teal">{level} / {length} letters</Badge></div>
+				<IconButton icon={<FaRedo />} aria-label="New game" title="New game" onClick={restart} />
+			</header>
+			<div className="guess-board" role="group" aria-label={`${length}-letter word, ${ATTEMPTS} attempts`}>
+				{Array.from({ length: ATTEMPTS }, (_, rowIndex) => {
+					const guess = game.guesses[rowIndex];
+					const letters = guess || (rowIndex === game.guesses.length ? input : "");
+					const scores = guess ? scoreGuess(guess, game.answer) : [];
+					return <div className="guess-row" key={rowIndex} style={{ gridTemplateColumns: `repeat(${length}, 1fr)` }}>
+						{Array.from({ length }, (_, columnIndex) => <div
+							key={columnIndex}
+							className={`letter-tile ${scores[columnIndex] || (letters[columnIndex] ? "filled" : "")}`}
+							aria-label={`Row ${rowIndex + 1}, letter ${columnIndex + 1}: ${letters[columnIndex] || "empty"}${scores[columnIndex] ? `, ${scores[columnIndex]}` : ""}`}
+						>{letters[columnIndex]}</div>)}
+					</div>;
+				})}
+			</div>
+			<div className="game-message" role="status" aria-live="polite">
+				{status === "won" ? <Text fontWeight="bold">Solved in {game.guesses.length}/{ATTEMPTS}!</Text>
+					: status === "lost" ? <Text fontWeight="bold">The word was {game.answer.toUpperCase()}.</Text>
+					: <Text>{ATTEMPTS - game.guesses.length} attempts left</Text>}
+				<Text>{message}</Text>
+			</div>
+			{status === "playing" ? <div className="game-keyboard" aria-label="Keyboard">
+				{keyboardRows.map((letters, rowIndex) => <div className="keyboard-row" key={letters}>
+					{rowIndex === 2 && <button type="button" className="letter-key action-key" aria-label="Submit guess" title="Submit guess" onClick={() => handleInput("Enter")}><AiOutlineEnter /></button>}
+					{Array.from(letters, letter => <button type="button" key={letter}
+						className={`letter-key ${keyStates[letter] || ""}`} aria-label={letter.toUpperCase()}
+						onClick={() => handleInput(letter)}>{letter}</button>)}
+					{rowIndex === 2 && <button type="button" className="letter-key action-key" aria-label="Backspace" title="Backspace" onClick={() => handleInput("Backspace")}><TiBackspaceOutline /></button>}
+				</div>)}
+			</div> : <div className="game-actions"><Button colorScheme="green" onClick={restart}>Play Again</Button><Button onClick={share}>Copy Result</Button></div>}
+			<Button variant="link" onClick={() => navigate("/wordle/difficulty-selection")}>Change Difficulty</Button>
+		</main>
+	);
+}

@@ -25,3 +25,62 @@
 	display: none;
 	margin-bottom: 20px;
 }
+.wordle-game {
+	--correct: #287c4e;
+	--present: #957015;
+	--absent: #525760;
+	width: min(100%, 520px);
+	margin: 0 auto;
+	padding: 72px 12px 24px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 18px;
+}
+.game-heading {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.game-heading h1 { font-size: 28px; font-weight: 700; }
+.guess-board { display: grid; gap: 8px; width: min(100%, 316px); }
+.guess-row { display: grid; gap: 8px; }
+.letter-tile {
+	aspect-ratio: 1;
+	max-height: 68px;
+	border: 2px solid #888b90;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 30px;
+	font-weight: 700;
+	text-transform: uppercase;
+	border-radius: 4px;
+}
+.letter-tile.filled { border-color: currentColor; }
+.game-message { text-align: center; min-height: 52px; }
+.game-keyboard { display: grid; gap: 6px; width: 100%; }
+.keyboard-row { display: flex; justify-content: center; gap: 4px; }
+.letter-key {
+	flex: 1 1 0;
+	min-width: 0;
+	max-width: 44px;
+	height: 52px;
+	border-radius: 4px;
+	background: #d6d9de;
+	color: #202328;
+	font-weight: 700;
+	text-transform: uppercase;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	touch-action: manipulation;
+}
+.letter-key:hover { filter: brightness(0.92); }
+.letter-key:focus-visible { outline: 3px solid #1486ae; outline-offset: 2px; }
+.letter-key.action-key { flex-grow: 1.5; max-width: 64px; font-size: 24px; }
+.letter-tile.correct, .letter-key.correct { background: var(--correct); border-color: var(--correct); color: white; }
+.letter-tile.present, .letter-key.present { background: var(--present); border-color: var(--present); color: white; }
+.letter-tile.absent, .letter-key.absent { background: var(--absent); border-color: var(--absent); color: white; }
+.game-actions { display: flex; gap: 12px; }

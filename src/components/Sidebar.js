@@ -39,7 +39,7 @@ const Sidebar = () => {
 				<DrawerOverlay />
 				<DrawerContent>
 					<DrawerCloseButton />
-					<DrawerHeader>Wordle2.0 Settings</DrawerHeader>
+					<DrawerHeader>Wordle Settings</DrawerHeader>
 
 					<DrawerBody>
 						<VStack height="60px"></VStack>
@@ -51,13 +51,13 @@ const Sidebar = () => {
 							</Button>
 							<Button
 								colorScheme={"blue"}
-								onClick={() => navigate("/wordle2/")}
+								onClick={() => navigate("/wordle/")}
 							>
 								Homepage
 							</Button>
 							<Button
 								colorScheme="facebook"
-								onClick={() => navigate("/wordle2/rules")}
+								onClick={() => navigate("/wordle/rules")}
 							>
 								Rules
 							</Button>
@@ -65,7 +65,7 @@ const Sidebar = () => {
 
 							<Button
 								colorScheme="pink"
-								onClick={() => navigate("/wordle2/about")}
+								onClick={() => navigate("/wordle/about")}
 							>
 								About the Developer
 							</Button>

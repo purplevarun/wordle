@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Homepage from "./routes/Homepage";
 import Levels from "./routes/Levels";
 import Rules from "./routes/Rules";
 import About from "./routes/About";
@@ -18,38 +17,38 @@ function App() {
 						</div>
 						<Routes>
 							<Route
-								path="/wordle2/"
+								path="/wordle/"
 								exact
-								element={<Homepage />}
+								element={<Game />}
 							/>
 							<Route
-								path="/wordle2/difficulty-selection"
+								path="/wordle/difficulty-selection"
 								exact
 								element={<Levels />}
 							/>
 							<Route
-								path="/wordle2/rules"
+								path="/wordle/rules"
 								exact
 								element={<Rules />}
 							/>
 							<Route
-								path="/wordle2/wordle2"
+								path="/wordle/wordle"
 								exact
-								element={<Homepage />}
+								element={<Game />}
 							/>
 							<Route
-								path="/wordle2/about"
+								path="/wordle/about"
 								exact
 								element={<About />}
 							/>
 							<Route
-								path="/wordle2/play"
+								path="/wordle/play"
 								exact
 								element={<Game />}
 							/>
 							<Route
 								path="*"
-								element={<Navigate to="/wordle2" replace />}
+								element={<Navigate to="/wordle" replace />}
 							/>
 						</Routes>
 					</BrowserRouter>

@@ -1,15 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./../styles/Definition.css";
 const Definition = ({ title, body }) => {
-	const [words, setWords] = useState(-1);
-	const chances = 4;
-	useEffect(() => {
-		title === "Noob"
-			? setWords(3)
-			: title === "Standard"
-			? setWords(4)
-			: setWords(5);
-	});
+	const words = title === "Noob" ? 3 : title === "Standard" ? 4 : 5;
 	return (
 		<div className="definition">
 			<h1

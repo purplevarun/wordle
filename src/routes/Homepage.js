@@ -6,7 +6,7 @@ import { FaMoon, FaSun } from "react-icons/fa";
 const Homepage = () => {
 	const navigation = useNavigate();
 	const gotoLevelsPage = () => {
-		navigation("/wordle2/difficulty-selection");
+		navigation("/wordle/difficulty-selection");
 	};
 	const { colorMode, toggleColorMode } = useColorMode();
 	return (
@@ -32,7 +32,7 @@ const Homepage = () => {
 					size="lg"
 					onClick={() => gotoLevelsPage()}
 				>
-					Click to Play Wordle 2.0
+					Click to Play Wordle
 				</Button>
 			</div>
 		</div>

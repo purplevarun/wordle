@@ -14,7 +14,7 @@ const Error = () => {
 				<VStack height={"20px"}></VStack>
 				<Button
 					colorScheme={"green"}
-					onClick={() => navigate("/wordle2")}
+					onClick={() => navigate("/wordle")}
 				>
 					Go Back to Homepage
 				</Button>

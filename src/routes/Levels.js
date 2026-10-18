@@ -3,29 +3,14 @@ import {
 	IconButton,
 	Tooltip,
 	useColorMode,
-	useToast,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./../styles/Levels.css";
 import { FaMoon, FaSun } from "react-icons/fa";
 
 const Levels = () => {
 	const navigate = useNavigate();
-	const [loaded, setLoaded] = useState(false);
-	const toast = useToast();
-	useEffect(() => {
-		if (!loaded) {
-			toast({
-				status: "error",
-				duration: "5000",
-				title: "Only Noob Level Available",
-				description:
-					"Visit About Page to know more. Click on Settings ➡️ About Developer",
-			});
-		}
-		setLoaded(true);
-	}, [loaded, toast]);
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	return (
@@ -44,7 +29,7 @@ const Levels = () => {
 						size="lg"
 						colorScheme="yellow"
 						onClick={() =>
-							navigate("/wordle2/play", {
+							navigate("/wordle/play?level=Noob", {
 								state: { level: "Noob" },
 							})
 						}
@@ -66,9 +51,8 @@ const Levels = () => {
 					<Button
 						size="lg"
 						colorScheme="blue"
-						disabled={true}
 						onClick={() =>
-							navigate("/wordle2/play", {
+							navigate("/wordle/play?level=Standard", {
 								state: { level: "Standard" },
 							})
 						}
@@ -88,9 +72,8 @@ const Levels = () => {
 					<Button
 						size="lg"
 						colorScheme="red"
-						disabled={true}
 						onClick={() =>
-							navigate("/wordle2/play", {
+							navigate("/wordle/play?level=Original", {
 								state: { level: "Original" },
 							})
 						}
